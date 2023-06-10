@@ -1,6 +1,7 @@
 ﻿using NFTValuations.Data;
 using NFTValuations.Models.Data;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace NFTValuations
@@ -9,10 +10,16 @@ namespace NFTValuations
     {
         public async Task InsertDatabaseModels(List<DatabaseModel> databaseModels)
         {
+            const int batchSize = 5; 
+
             using (var dbContext = new NFTDbContext())
             {
-                dbContext.DatabaseModels.AddRange(databaseModels);
-                await dbContext.SaveChangesAsync();
+                for (int i = 0; i < databaseModels.Count; i += batchSize)
+                {
+                    var batch = databaseModels.Skip(i).Take(batchSize);
+                    dbContext.DatabaseModels.AddRange(batch);
+                    await dbContext.SaveChangesAsync();
+                }
             }
         }
     }

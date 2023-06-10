@@ -2,6 +2,7 @@
 using NFTValuations.Models.Data;
 using NFTValuations.Services;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -20,9 +21,9 @@ namespace NFTValuations
 
         public async Task ProcessNFTMetadata(Dictionary<string, BigInteger> nftDictionary, DatabaseInserter databaseInserter)
         {
-            var databaseModels = new List<DatabaseModel>();
+            var databaseModels = new ConcurrentBag<DatabaseModel>(); 
 
-            foreach (var entry in nftDictionary)
+            await Task.WhenAll(nftDictionary.Select(async entry =>
             {
                 var contractAddress = entry.Key;
                 var tokenIndex = entry.Value;
@@ -31,16 +32,21 @@ namespace NFTValuations
                 {
                     var metadata = await _extractor.ExtractNFTMetadata(contractAddress, tokenIndex);
 
-                    var databaseModel = CreateDatabaseModel(metadata);
-                    databaseModels.Add(databaseModel);
+                    if (metadata != null)
+                    {
+                        var databaseModel = CreateDatabaseModel(metadata);
+
+                        databaseModels.Add(databaseModel);
+                    }
+                        
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error extracting NFT metadata for contract address {contractAddress}, token index {tokenIndex}: {ex.Message}");
                 }
-            }
+            }));
 
-            await databaseInserter.InsertDatabaseModels(databaseModels);
+            await databaseInserter.InsertDatabaseModels(databaseModels.ToList());
         }
 
         private static DatabaseModel CreateDatabaseModel(NFTMetadata metadata)
