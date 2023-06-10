@@ -23,7 +23,7 @@ namespace NFTValuations
                 Description = metadata.Description,
                 ExternalUrl = metadata.ExternalUrl,
                 Media = metadata.Media,
-                Properties = metadata.Properties.Select(p => new
+                Properties = metadata.Properties?.Select(p => new
                 {
                     Category = p.Category,
                     Property = p.Property

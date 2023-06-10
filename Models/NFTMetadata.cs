@@ -20,7 +20,7 @@ namespace NFT
         public string Media { get; set; }
 
         [JsonProperty("attributes")]
-        public List<Attribute> Properties { get; set; }
+        public List<Attribute>? Properties { get; set; }
 
         public static string ABI { get; set; } = @"[
         {
