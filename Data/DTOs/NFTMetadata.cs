@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Text;
-using NFT.Models;
+using NFT;
 
 namespace NFT
 {

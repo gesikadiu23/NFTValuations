@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NFT.Models
+namespace NFT
 {
     public class Attribute
     {
