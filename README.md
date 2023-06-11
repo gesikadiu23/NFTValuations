@@ -23,6 +23,29 @@ NFT Valuations is a project that extracts metadata for Non-Fungible Tokens (NFTs
 1. Clone the repository:
 git clone [https://github.com/gesikadiu23/NFTValuations.git]
 
+## Instructions
+
+1. On the NFTDbContext.cs Class you need to add the connection string to your database on line 14.
+
+```
+  protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+  {
+      // Configure your database connection here
+      optionsBuilder.UseSqlServer(@"Your_Connection_String");
+  }
+```
+In order to invoke a contract, you can use infura.io to create a free account. From here, you need to get the mainnet
+endpoint in the form of: https://mainnet.infura.io/v3/YOUR_API_KEY_VALUE_IN_HEX
+
+2. Insert your API Key on the NFTMetadataExtractor.cs class on line 27.
+3. Insert the path to the unsupportedUrls.txt file on your machine on line 28.
+
+```
+        private const string infuraEndpoint = "https://mainnet.infura.io/v3/your_Key";
+        private const string unsupportedUrlsFilePath = @"";
+```
+
+
 
 ## Contributing
 Contributions to NFT Valuations are welcome! If you find any bugs or have suggestions for improvements, please submit an issue or open a pull request.
