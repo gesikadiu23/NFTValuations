@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NFT.Data.DTOs
 {
-    public class NFTMetadata
+    public class NFTMetadataDTO
     {
         // The name of the NFT
         [JsonProperty("Name")]
@@ -23,7 +23,7 @@ namespace NFT.Data.DTOs
 
         // The list of attributes or properties of the NFT
         [JsonProperty("attributes")]
-        public List<Attribute>? Properties { get; set; }
+        public List<AttributeDTO>? Properties { get; set; }
 
         // The ABI (Application Binary Interface) of the NFT contract
         public static string ABI { get; set; } = @"[

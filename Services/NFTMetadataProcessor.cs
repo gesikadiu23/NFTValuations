@@ -36,7 +36,7 @@ namespace NFTValuations.Services
                 try
                 {
                     // Check if the metadata for the NFT is already cached
-                    if (!_cache.TryGetValue(contractAddress + tokenIndex.ToString(), out NFTMetadata metadata))
+                    if (!_cache.TryGetValue(contractAddress + tokenIndex.ToString(), out NFTMetadataDTO metadata))
                     {
                         // Metadata not found in cache, extract it and store in cache
                         metadata = await _extractor.ExtractNFTMetadata(contractAddress, tokenIndex);
@@ -87,10 +87,10 @@ namespace NFTValuations.Services
         }
 
         // Checks if the properties of the NFT have changed by comparing with the cached metadata
-        private bool HasChangedProperties(string contractAddress, BigInteger tokenIndex, NFTMetadata metadata)
+        private bool HasChangedProperties(string contractAddress, BigInteger tokenIndex, NFTMetadataDTO metadata)
         {
             // Retrieve the cached metadata for the NFT
-            if (_cache.TryGetValue(contractAddress + tokenIndex.ToString(), out NFTMetadata cachedMetadata))
+            if (_cache.TryGetValue(contractAddress + tokenIndex.ToString(), out NFTMetadataDTO cachedMetadata))
             {
                 // Compare the properties of the cached metadata with the new metadata
                 // Implement your logic here to compare the properties and determine if there are changes
@@ -105,7 +105,7 @@ namespace NFTValuations.Services
 
 
         // Creates a DatabaseModel object from the NFTMetadata object.
-        private static DatabaseModel CreateDatabaseModel(NFTMetadata metadata, string contractAddress, BigInteger tokenIndex)
+        private static DatabaseModel CreateDatabaseModel(NFTMetadataDTO metadata, string contractAddress, BigInteger tokenIndex)
         {
             var databaseModel = new DatabaseModel
             {

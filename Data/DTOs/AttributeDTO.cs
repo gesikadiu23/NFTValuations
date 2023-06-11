@@ -2,7 +2,7 @@
 
 namespace NFT.Data.DTOs
 {
-    public class Attribute
+    public class AttributeDTO
     {
         // The category or trait type of the attribute
         [JsonProperty("trait_type")]

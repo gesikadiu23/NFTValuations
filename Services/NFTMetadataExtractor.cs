@@ -28,19 +28,19 @@ namespace NFTValuations.Services
         private const string unsupportedUrlsFilePath = @"";
 
         // Extracts the metadata for the given NFT.
-        public async Task<NFTMetadata> ExtractNFTMetadata(string contractAddress, BigInteger tokenIndex)
+        public async Task<NFTMetadataDTO> ExtractNFTMetadata(string contractAddress, BigInteger tokenIndex)
         {
 
             string uri = String.Empty;
             try
             {
-                if (_cache.TryGetValue(contractAddress + tokenIndex.ToString(), out NFTMetadata metadata))
+                if (_cache.TryGetValue(contractAddress + tokenIndex.ToString(), out NFTMetadataDTO metadata))
                 {
                     return metadata;
                 }
 
                 // Get the ABI (Application Binary Interface) for the NFTMetadata contract
-                var ABI = NFTMetadata.ABI;
+                var ABI = NFTMetadataDTO.ABI;
 
                 // Create an instance of the Web3 class using the Infura endpoint URL
                 var web3 = new Web3(infuraEndpoint);
@@ -73,7 +73,7 @@ namespace NFTValuations.Services
                         var encodedJson = uri.Substring("data:application/json;base64,".Length);
                         var jsonBytes = Convert.FromBase64String(encodedJson);
                         var decodedJson = Encoding.UTF8.GetString(jsonBytes);
-                        return JsonConvert.DeserializeObject<NFTMetadata>(decodedJson);
+                        return JsonConvert.DeserializeObject<NFTMetadataDTO>(decodedJson);
 
                     // If the URI starts with "https://api.coolcatsnft.com/", append "cat/" to the URI
                     case var _ when uri.StartsWith("https://api.coolcatsnft.com/"):
@@ -113,12 +113,12 @@ namespace NFTValuations.Services
                     // If the URI starts with "data:application/json;utf8,", remove the prefix and return the deserialized object
                     case var _ when uri.StartsWith("data:application/json;utf8,"):
                         var json = uri.Substring("data:application/json;utf8,".Length);
-                        return JsonConvert.DeserializeObject<NFTMetadata>(json);
+                        return JsonConvert.DeserializeObject<NFTMetadataDTO>(json);
 
                     // If the URI starts with "data:text/plain;charset=utf-8,", remove the prefix and return the deserialized object
                     case var _ when uri.StartsWith("data:text/plain;charset=utf-8,"):
                         var text = uri.Substring("data:text/plain;charset=utf-8,".Length);
-                        return JsonConvert.DeserializeObject<NFTMetadata>(text);
+                        return JsonConvert.DeserializeObject<NFTMetadataDTO>(text);
 
                     // If none of the above cases match, throw an exception indicating unsupported URI scheme
                     default:
@@ -134,7 +134,7 @@ namespace NFTValuations.Services
                 _cache.Set(contractAddress + tokenIndex.ToString(), metadata);
 
                 // Deserialize the metadata JSON into an NFTMetadata object
-                metadata = JsonConvert.DeserializeObject<NFTMetadata>(metadataJson);
+                metadata = JsonConvert.DeserializeObject<NFTMetadataDTO>(metadataJson);
 
                 // Return the extracted metadata
                 return metadata;
