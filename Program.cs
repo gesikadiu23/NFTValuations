@@ -12,6 +12,8 @@ namespace NFTValuations
         static async Task Main(string[] args)
         {
             // Dictionary that maps contract addresses to token indices for NFTs
+            // This is not dynamic as we are assuming there only these 15 NFTs
+            // This could also read from an excel file the contract addresses and their Token Ids and process them dynamically
             var nftDictionary = new Dictionary<string, BigInteger>
             {
                  { "0x1a92f7381b9f03921564a437210bb9396471050c",BigInteger.Parse("0") },
@@ -35,6 +37,7 @@ namespace NFTValuations
             var metadataProcessor = new NFTMetadataProcessor(memoryCache);
             var databaseInserter = new DatabaseInserter();
 
+            //Processing The NFT dictionary
             await metadataProcessor.ProcessNFTMetadata(nftDictionary, databaseInserter);
 
         }
