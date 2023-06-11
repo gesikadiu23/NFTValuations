@@ -51,11 +51,17 @@ namespace NFTValuations
 
                     if (metadata != null)
                     {
-                        // Create a DatabaseModel object from the extracted metadata
-                        var databaseModel = CreateDatabaseModel(metadata, contractAddress, tokenIndex);
+                        // Check if the NFT is already present in the database
+                        bool isNewNFT = await IsNewNFT(contractAddress, tokenIndex, databaseInserter);
 
-                        // Add the DatabaseModel to the concurrent bag
-                        databaseModels.Add(databaseModel);
+                        if (isNewNFT || HasChangedProperties(contractAddress, tokenIndex, metadata))
+                        {
+                            // Create a DatabaseModel object from the extracted metadata
+                            var databaseModel = CreateDatabaseModel(metadata, contractAddress, tokenIndex);
+
+                            // Add the DatabaseModel to the concurrent bag
+                            databaseModels.Add(databaseModel);
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -68,6 +74,35 @@ namespace NFTValuations
             // Convert the concurrent bag to a list and insert the DatabaseModels into the database
             await databaseInserter.InsertDatabaseModels(databaseModels.ToList());
         }
+
+        // Checks if the NFT is new by checking if it exists in the database
+        private async Task<bool> IsNewNFT(string contractAddress, BigInteger tokenIndex, DatabaseInserter databaseInserter)
+        {
+            // Implement your logic here to check if the NFT already exists in the database
+            // Return true if it's a new NFT, false otherwise
+            // You can use the databaseInserter or any other database service to perform the check
+            // Example implementation:
+            var existingNFT = await databaseInserter.GetNFTByContractAndToken(contractAddress, tokenIndex);
+            return existingNFT == null;
+        }
+
+        // Checks if the properties of the NFT have changed by comparing with the cached metadata
+        private bool HasChangedProperties(string contractAddress, BigInteger tokenIndex, NFTMetadata metadata)
+        {
+            // Retrieve the cached metadata for the NFT
+            if (_cache.TryGetValue(contractAddress + tokenIndex.ToString(), out NFTMetadata cachedMetadata))
+            {
+                // Compare the properties of the cached metadata with the new metadata
+                // Implement your logic here to compare the properties and determine if there are changes
+                // Return true if there are changes, false otherwise
+                // Example implementation:
+                return !cachedMetadata.Properties.SequenceEqual(metadata.Properties);
+            }
+
+            // No cached metadata found, consider it as changed
+            return true;
+        }
+
 
         // Creates a DatabaseModel object from the NFTMetadata object.
         private static DatabaseModel CreateDatabaseModel(NFTMetadata metadata, string contractAddress, BigInteger tokenIndex)

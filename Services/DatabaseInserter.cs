@@ -1,18 +1,20 @@
-﻿using NFTValuations.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using NFTValuations.Data;
 using NFTValuations.Models.Data;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Threading.Tasks;
 
 namespace NFTValuations
 {
     public class DatabaseInserter
     {
+
         // Inserts a list of DatabaseModel objects into the database.
         public async Task InsertDatabaseModels(List<DatabaseModel> databaseModels)
         {
             const int batchSize = 5; // The number of DatabaseModels to insert in each batch
-
             using (var dbContext = new NFTDbContext())
             {
                 for (int i = 0; i < databaseModels.Count; i += batchSize)
@@ -27,6 +29,21 @@ namespace NFTValuations
                     await dbContext.SaveChangesAsync();
                 }
             }
+        }
+
+        // Retrieves an NFT from the database based on contract address and token index
+        public async Task<DatabaseModel> GetNFTByContractAndToken(string contractAddress, BigInteger tokenIndex)
+        {
+            using (var dbContext = new NFTDbContext())
+            {
+                // Implement your logic here to retrieve the NFT from the database
+                // Example implementation:
+                var nft = await dbContext.DatabaseModels
+                   .FirstOrDefaultAsync(d => d.ContractTokenId == (contractAddress + tokenIndex.ToString()));
+
+                return nft;
+            }
+           
         }
     }
 }
