@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.EntityFrameworkCore;
-using NFTValuations.Models.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using NFTValuations.Data.Models;
 
 namespace NFTValuations.Data
 {

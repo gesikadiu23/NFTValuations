@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
-using NFT;
-using NFTValuations.Models.Data;
-using NFTValuations.Services;
+using NFT.Data.DTOs;
+using NFTValuations.Data.Models;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 
-namespace NFTValuations
+namespace NFTValuations.Services
 {
     public class NFTMetadataProcessor
     {
@@ -74,6 +73,7 @@ namespace NFTValuations
             // Convert the concurrent bag to a list and insert the DatabaseModels into the database
             await databaseInserter.InsertDatabaseModels(databaseModels.ToList());
         }
+        #region private methods
 
         // Checks if the NFT is new by checking if it exists in the database
         private async Task<bool> IsNewNFT(string contractAddress, BigInteger tokenIndex, DatabaseInserter databaseInserter)
@@ -124,5 +124,8 @@ namespace NFTValuations
 
             return databaseModel;
         }
+
+        #endregion
+
     }
 }

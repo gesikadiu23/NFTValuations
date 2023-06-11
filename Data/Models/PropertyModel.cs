@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NFTValuations.Models.Data
+﻿namespace NFTValuations.Data.Models
 {
     public class PropertyModel
     {

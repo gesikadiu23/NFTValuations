@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NFTValuations.Data;
-using NFTValuations.Models.Data;
+using NFTValuations.Data.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 
-namespace NFTValuations
+namespace NFTValuations.Services
 {
     public class DatabaseInserter
     {

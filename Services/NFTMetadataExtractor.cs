@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Nethereum.Web3;
 using Newtonsoft.Json;
-using NFT;
+using NFT.Data.DTOs;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -149,6 +149,8 @@ namespace NFTValuations.Services
             }
         }
 
+        #region private methods
+
         private void WriteUnsupportedUrlToFile(string contractAddress, BigInteger tokenIndex, string uri)
         {
             // Create a new line with the unsupported URL
@@ -165,5 +167,7 @@ namespace NFTValuations.Services
                 Console.WriteLine($"Error writing unsupported URL to file: {ex.Message}");
             }
         }
+
+        #endregion
     }
 }

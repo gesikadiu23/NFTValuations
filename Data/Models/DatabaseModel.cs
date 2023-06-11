@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace NFTValuations.Models.Data
+namespace NFTValuations.Data.Models
 {
     public class DatabaseModel
     {

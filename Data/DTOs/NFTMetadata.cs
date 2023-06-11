@@ -1,8 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Text;
 
-namespace NFT
+namespace NFT.Data.DTOs
 {
     public class NFTMetadata
     {

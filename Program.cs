@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
-using NFTValuations.Data;
 using NFTValuations.Services;
 
 namespace NFTValuations
