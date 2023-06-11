@@ -9,6 +9,7 @@ namespace NFTValuations
     {
         static async Task Main(string[] args)
         {
+            // Dictionary that maps contract addresses to token indices for NFTs
             var nftDictionary = new Dictionary<string, BigInteger>
             {
                  { "0x1a92f7381b9f03921564a437210bb9396471050c",BigInteger.Parse("0") },
@@ -28,9 +29,11 @@ namespace NFTValuations
                 { "0x892848074ddea461a15f337250da3ce55580ca85", BigInteger.Parse("0") }
             };
 
+            // Create an instance of NFTMetadataProcessor and DatabaseInserter
             var metadataProcessor = new NFTMetadataProcessor();
             var databaseInserter = new DatabaseInserter();
 
+            // Process the NFT metadata and insert into the database
             await metadataProcessor.ProcessNFTMetadata(nftDictionary, databaseInserter);
         }
     }

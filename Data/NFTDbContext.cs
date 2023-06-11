@@ -6,12 +6,10 @@ using NFTValuations.Models.Data;
 
 namespace NFTValuations.Data
 {
- 
-
     public class NFTDbContext : DbContext
     {
+        // DbSet representing the collection of DatabaseModel objects in the database
         public DbSet<DatabaseModel> DatabaseModels { get; set; }
-
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
