@@ -11,7 +11,7 @@ namespace NFTValuations.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // Configure your database connection here
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=N;Integrated Security=true;");
+            optionsBuilder.UseSqlServer(@"Your_Connection_String");
         }
     }
 }

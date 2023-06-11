@@ -24,7 +24,7 @@ namespace NFTValuations.Services
 
 
         // The endpoint URL for the Infura API
-        private const string infuraEndpoint = "https://mainnet.infura.io/v3/b3ec6029213a49d4b793ee85d19e1c94";
+        private const string infuraEndpoint = "https://mainnet.infura.io/v3/your_Key";
         private const string unsupportedUrlsFilePath = @"";
 
         // Extracts the metadata for the given NFT.
