@@ -78,10 +78,7 @@ namespace NFTValuations.Services
         // Checks if the NFT is new by checking if it exists in the database
         private async Task<bool> IsNewNFT(string contractAddress, BigInteger tokenIndex, DatabaseInserter databaseInserter)
         {
-            // Implement your logic here to check if the NFT already exists in the database
             // Return true if it's a new NFT, false otherwise
-            // You can use the databaseInserter or any other database service to perform the check
-            // Example implementation:
             var existingNFT = await databaseInserter.GetNFTByContractAndToken(contractAddress, tokenIndex);
             return existingNFT == null;
         }
@@ -93,9 +90,6 @@ namespace NFTValuations.Services
             if (_cache.TryGetValue(contractAddress + tokenIndex.ToString(), out NFTMetadataDTO cachedMetadata))
             {
                 // Compare the properties of the cached metadata with the new metadata
-                // Implement your logic here to compare the properties and determine if there are changes
-                // Return true if there are changes, false otherwise
-                // Example implementation:
                 return !cachedMetadata.Properties.SequenceEqual(metadata.Properties);
             }
 

@@ -34,6 +34,7 @@ namespace NFTValuations.Services
             string uri = String.Empty;
             try
             {
+                // Check if the NFT exists on the cache
                 if (_cache.TryGetValue(contractAddress + tokenIndex.ToString(), out NFTMetadataDTO metadata))
                 {
                     return metadata;
@@ -128,6 +129,8 @@ namespace NFTValuations.Services
                 // Fetch the metadata JSON from the resolved URI
                 var metadataJson = await _httpClient.GetStringAsync(uri);
 
+                // By default the cache lifespan is indefinite, We are settingit to 1 hour as an example
+                // the data may stay in cache for much longer if needed
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
                 .SetSlidingExpiration(TimeSpan.FromHours(1));
 
@@ -142,7 +145,7 @@ namespace NFTValuations.Services
             catch (Exception ex)
             {
                 // Handle any errors that occur during the extraction process and return null
-                // Write the unsupported URL to a text file
+                // Call the method to write the unsupported URLs to a text file
                 WriteUnsupportedUrlToFile(contractAddress, tokenIndex, uri);
                 Console.WriteLine($"Error extracting NFT metadata: {ex.Message}. Contract Address: {contractAddress}, Token Index: {tokenIndex}");
                 return null;

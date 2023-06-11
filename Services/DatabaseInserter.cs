@@ -31,13 +31,12 @@ namespace NFTValuations.Services
             }
         }
 
-        // Retrieves an NFT from the database based on contract address and token index
+        // Retrieves an NFT from the database 
         public async Task<DatabaseModel> GetNFTByContractAndToken(string contractAddress, BigInteger tokenIndex)
         {
             using (var dbContext = new NFTDbContext())
             {
-                // Implement your logic here to retrieve the NFT from the database
-                // Example implementation:
+                //Retrieving the NFT from the database by the ContractAddress and Token Index concatination
                 var nft = await dbContext.DatabaseModels
                    .FirstOrDefaultAsync(d => d.ContractTokenId == (contractAddress + tokenIndex.ToString()));
 
