@@ -17,6 +17,8 @@ namespace NFTValuations.Models.Data
         public string Media { get; set; }
         // The list of attributes or properties of the NFT
         public List<PropertyModel> Properties { get; set; }
+        //The unique Identifier, a Concatenation of contract address and token ID
+        public string ContractTokenId { get; set; }
     }
 
 }

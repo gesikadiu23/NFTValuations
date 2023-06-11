@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NFTValuations.Data;
 
 namespace NFTValuations.Migrations
 {
     [DbContext(typeof(NFTDbContext))]
-    partial class NFTDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230611131919_add-ContractTokenId")]
+    partial class addContractTokenId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

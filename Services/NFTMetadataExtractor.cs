@@ -1,4 +1,5 @@
-﻿using Nethereum.Web3;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Nethereum.Web3;
 using Newtonsoft.Json;
 using NFT;
 using System;
@@ -11,17 +12,29 @@ namespace NFTValuations.Services
 {
     public class NFTMetadataExtractor
     {
+        private readonly HttpClient _httpClient;
+        private readonly IMemoryCache _cache;
+
+        public NFTMetadataExtractor(IMemoryCache cache)
+        {
+            _httpClient = new HttpClient();
+            _cache = cache;
+        }
+
+
         // The endpoint URL for the Infura API
         private const string infuraEndpoint = "https://mainnet.infura.io/v3/b3ec6029213a49d4b793ee85d19e1c94";
-
-        // HttpClient instance for making HTTP requests
-        private static readonly HttpClient httpClient = new HttpClient();
 
         // Extracts the metadata for the given NFT.
         public async Task<NFTMetadata> ExtractNFTMetadata(string contractAddress, BigInteger tokenIndex)
         {
             try
             {
+                if (_cache.TryGetValue(contractAddress + tokenIndex.ToString(), out NFTMetadata metadata))
+                {
+                    return metadata;
+                }
+
                 // Get the ABI (Application Binary Interface) for the NFTMetadata contract
                 var ABI = NFTMetadata.ABI;
 
@@ -109,10 +122,15 @@ namespace NFTValuations.Services
                 }
 
                 // Fetch the metadata JSON from the resolved URI
-                var metadataJson = await httpClient.GetStringAsync(uri);
+                var metadataJson = await _httpClient.GetStringAsync(uri);
+
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                .SetSlidingExpiration(TimeSpan.FromHours(1));
+
+                _cache.Set(contractAddress + tokenIndex.ToString(), metadata);
 
                 // Deserialize the metadata JSON into an NFTMetadata object
-                var metadata = JsonConvert.DeserializeObject<NFTMetadata>(metadataJson);
+                metadata = JsonConvert.DeserializeObject<NFTMetadata>(metadataJson);
 
                 // Return the extracted metadata
                 return metadata;

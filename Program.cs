@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Numerics;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
+using NFTValuations.Services;
 
 namespace NFTValuations
 {
@@ -29,12 +31,12 @@ namespace NFTValuations
                 { "0x892848074ddea461a15f337250da3ce55580ca85", BigInteger.Parse("0") }
             };
 
-            // Create an instance of NFTMetadataProcessor and DatabaseInserter
-            var metadataProcessor = new NFTMetadataProcessor();
+            var memoryCache = new MemoryCache(new MemoryCacheOptions());
+            var metadataProcessor = new NFTMetadataProcessor(memoryCache);
             var databaseInserter = new DatabaseInserter();
 
-            // Process the NFT metadata and insert into the database
             await metadataProcessor.ProcessNFTMetadata(nftDictionary, databaseInserter);
+
         }
     }
 }

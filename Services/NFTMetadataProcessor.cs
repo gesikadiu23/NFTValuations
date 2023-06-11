@@ -1,4 +1,5 @@
-﻿using NFT;
+﻿using Microsoft.Extensions.Caching.Memory;
+using NFT;
 using NFTValuations.Models.Data;
 using NFTValuations.Services;
 using System;
@@ -13,10 +14,12 @@ namespace NFTValuations
     public class NFTMetadataProcessor
     {
         private readonly NFTMetadataExtractor _extractor;
+        private readonly IMemoryCache _cache;
 
-        public NFTMetadataProcessor()
+        public NFTMetadataProcessor(IMemoryCache cache)
         {
-            _extractor = new NFTMetadataExtractor();
+            _extractor = new NFTMetadataExtractor(cache);
+            _cache = cache;
         }
 
         // Processes the metadata for a dictionary of NFTs and inserts the extracted data into a database.
@@ -33,13 +36,23 @@ namespace NFTValuations
 
                 try
                 {
-                    // Extract the metadata for the NFT
-                    var metadata = await _extractor.ExtractNFTMetadata(contractAddress, tokenIndex);
+                    // Check if the metadata for the NFT is already cached
+                    if (!_cache.TryGetValue(contractAddress + tokenIndex.ToString(), out NFTMetadata metadata))
+                    {
+                        // Metadata not found in cache, extract it and store in cache
+                        metadata = await _extractor.ExtractNFTMetadata(contractAddress, tokenIndex);
+
+                        if (metadata != null)
+                        {
+                            // Cache the metadata with a unique cache key
+                            _cache.Set(contractAddress + tokenIndex.ToString(), metadata);
+                        }
+                    }
 
                     if (metadata != null)
                     {
                         // Create a DatabaseModel object from the extracted metadata
-                        var databaseModel = CreateDatabaseModel(metadata);
+                        var databaseModel = CreateDatabaseModel(metadata, contractAddress, tokenIndex);
 
                         // Add the DatabaseModel to the concurrent bag
                         databaseModels.Add(databaseModel);
@@ -57,7 +70,7 @@ namespace NFTValuations
         }
 
         // Creates a DatabaseModel object from the NFTMetadata object.
-        private static DatabaseModel CreateDatabaseModel(NFTMetadata metadata)
+        private static DatabaseModel CreateDatabaseModel(NFTMetadata metadata, string contractAddress, BigInteger tokenIndex)
         {
             var databaseModel = new DatabaseModel
             {
@@ -70,7 +83,8 @@ namespace NFTValuations
                 {
                     Category = p.Category,
                     Property = p.Property
-                }).ToList()
+                }).ToList(),
+                ContractTokenId = contractAddress + tokenIndex.ToString() // Concatenation of contract address and token ID
             };
 
             return databaseModel;
