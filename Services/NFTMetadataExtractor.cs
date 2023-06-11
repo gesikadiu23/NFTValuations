@@ -131,6 +131,7 @@ namespace NFTValuations.Services
 
                 // By default the cache lifespan is indefinite, We are settingit to 1 hour as an example
                 // the data may stay in cache for much longer if needed
+                // We are assuming that there are no changes in the NFT's or new ones more frequent than 1 hour
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
                 .SetSlidingExpiration(TimeSpan.FromHours(1));
 

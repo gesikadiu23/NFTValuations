@@ -79,6 +79,8 @@ namespace NFTValuations.Services
         private async Task<bool> IsNewNFT(string contractAddress, BigInteger tokenIndex, DatabaseInserter databaseInserter)
         {
             // Return true if it's a new NFT, false otherwise
+            // We can also compare if the object in the database is the same as the one that we are retrieving
+            // We are doing that comparison only towards the cached NFT's and we are assuming the cache is always aligned with the database
             var existingNFT = await databaseInserter.GetNFTByContractAndToken(contractAddress, tokenIndex);
             return existingNFT == null;
         }
