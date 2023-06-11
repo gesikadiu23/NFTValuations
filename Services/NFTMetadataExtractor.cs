@@ -3,6 +3,7 @@ using Nethereum.Web3;
 using Newtonsoft.Json;
 using NFT;
 using System;
+using System.IO;
 using System.Net.Http;
 using System.Numerics;
 using System.Text;
@@ -24,10 +25,13 @@ namespace NFTValuations.Services
 
         // The endpoint URL for the Infura API
         private const string infuraEndpoint = "https://mainnet.infura.io/v3/b3ec6029213a49d4b793ee85d19e1c94";
+        private const string unsupportedUrlsFilePath = @"";
 
         // Extracts the metadata for the given NFT.
         public async Task<NFTMetadata> ExtractNFTMetadata(string contractAddress, BigInteger tokenIndex)
         {
+
+            string uri = String.Empty;
             try
             {
                 if (_cache.TryGetValue(contractAddress + tokenIndex.ToString(), out NFTMetadata metadata))
@@ -48,7 +52,7 @@ namespace NFTValuations.Services
                 var tokenUriFunction = contract.GetFunction("tokenURI");
 
                 // Call the tokenURI function to get the URI of the token's metadata
-                var uri = await tokenUriFunction.CallAsync<string>(tokenIndex);
+                uri = await tokenUriFunction.CallAsync<string>(tokenIndex);
 
                 // Process different URI schemes and convert them to a standard format
 
@@ -138,8 +142,27 @@ namespace NFTValuations.Services
             catch (Exception ex)
             {
                 // Handle any errors that occur during the extraction process and return null
-                Console.WriteLine($"Error extracting NFT metadata: {ex.Message}");
+                // Write the unsupported URL to a text file
+                WriteUnsupportedUrlToFile(contractAddress, tokenIndex, uri);
+                Console.WriteLine($"Error extracting NFT metadata: {ex.Message}. Contract Address: {contractAddress}, Token Index: {tokenIndex}");
                 return null;
+            }
+        }
+
+        private void WriteUnsupportedUrlToFile(string contractAddress, BigInteger tokenIndex, string uri)
+        {
+            // Create a new line with the unsupported URL
+            string line = $"Contract Address : {contractAddress}, Token Index: {tokenIndex}, URL: {uri}";
+
+            try
+            {
+                // Append the line to the text file
+                File.AppendAllText(unsupportedUrlsFilePath, line + Environment.NewLine);
+            }
+            catch (Exception ex)
+            {
+                // Handle any errors that occur during file writing
+                Console.WriteLine($"Error writing unsupported URL to file: {ex.Message}");
             }
         }
     }
